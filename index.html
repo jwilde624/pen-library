@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="description" content="Julia's fountain pen collection: browse her pens by brand, plus pens currently for sale.">
+<meta property="og:title" content="julia here. Pen Library">
+<meta property="og:description" content="Browse Julia's fountain pen collection.">
+<style>:root{color-scheme:light}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>julia here. Pen Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: filter rail on the left (stacks on top under 900px), swatch-card grid on the right */
+:root{
+  --bg:#f7f3f8; --card:#fffdfe; --ink:#2a1f30; --muted:#76697c; --line:#e6dbe9;
+  --plum:#52345f; --lav:#ece3f1; --chip:#f1eaf5; --gold:#a8822f; --band:#f1eff2; --band-ink:#5a535e;
+  --display:"Montserrat",system-ui,-apple-system,sans-serif; --body:"DM Sans",system-ui,-apple-system,sans-serif;
+  --c-p:#d9779b; --c-r:#b8323c; --c-o:#d9772f; --c-y:#d4a72c; --c-g:#4f8a4b; --c-t:#1f8f8a; --c-b:#2f5fa8; --c-u:#6b4596; --c-n:#7a5132; --c-k:#4a4a52;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#171217; --card:#211a23; --ink:#f1eaf3; --muted:#a898ad; --line:#362c39;
+  --plum:#e0d3e8; --lav:#2f2436; --chip:#2a2130; --gold:#d9b46a; --band:#2b252d; --band-ink:#bcb2c0;
+  --c-p:#e58aad; --c-r:#d4545d; --c-o:#e88d45; --c-y:#e2bb48; --c-g:#6aa865; --c-t:#36aaa4; --c-b:#5683cc; --c-u:#9170bd; --c-n:#a0724c; --c-k:#7a7a84; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#171217; --card:#211a23; --ink:#f1eaf3; --muted:#a898ad; --line:#362c39;
+  --plum:#e0d3e8; --lav:#2f2436; --chip:#2a2130; --gold:#d9b46a; --band:#2b252d; --band-ink:#bcb2c0;
+  --c-p:#e58aad; --c-r:#d4545d; --c-o:#e88d45; --c-y:#e2bb48; --c-g:#6aa865; --c-t:#36aaa4; --c-b:#5683cc; --c-u:#9170bd; --c-n:#a0724c; --c-k:#7a7a84; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);margin:0;font-size:15px;line-height:1.45;
+  padding-block:28px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.page{max-width:1180px;margin:0 auto;display:grid;gap:22px}
+.hero{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+.topbar{background:#fff;margin:-28px calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 64px calc(-1 * max(16px, env(safe-area-inset-left, 0px)));padding:52px 16px;display:flex;justify-content:center}
+.topbar a{display:block;line-height:0;border-radius:6px}
+.topbar svg{width:clamp(155px,37vw,210px);height:auto}
+footer a{color:var(--plum);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold)}
+footer a:hover{color:var(--gold)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,5vw,46px);line-height:1.05;margin:0;color:var(--plum);text-wrap:balance}
+.side{display:grid;gap:14px;align-content:start;min-width:0}
+@media (min-width:901px) and (min-height:980px){.side{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}}
+@media (max-width:900px){.side{display:contents}.rail{order:0}main{order:1}.statcard{order:2}}
+.statcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;gap:12px}
+.statcard .glabel{margin:0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;font-variant-numeric:tabular-nums}
+.stat b{display:block;font-family:var(--display);font-size:18px;line-height:1.2;color:var(--ink)}
+.stat span{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+.rail{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:18px;}
+.group{display:grid;gap:8px}
+.glabel{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--plum)}
+input[type=search],select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+input[type=search]:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--chip);border-radius:12px;padding:4px;gap:4px}
+.seg button{font:inherit;font-size:13px;font-weight:600;border:0;border-radius:9px;padding:7px 4px;background:transparent;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgb(0 0 0/.12)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.dd summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;user-select:none}
+.dd summary::-webkit-details-marker{display:none}
+.dd summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.dd summary::after{content:"";flex:none;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-2px) rotate(45deg);transition:transform .15s}
+.dd[open] summary::after{transform:translateY(2px) rotate(-135deg)}
+.dd summary.on{border-color:var(--plum)}
+.dd .chips{padding:10px 2px 2px}
+.chip{font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:5px 10px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--plum);border-color:var(--plum);color:var(--card)}
+.chip .dot{width:11px;height:11px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgb(0 0 0/.15)}
+.chip small{font-size:11px;opacity:.65;font-variant-numeric:tabular-nums}
+.toggle{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--plum)}
+.clear{font:inherit;font-size:13px;font-weight:700;background:none;border:0;color:var(--plum);cursor:pointer;padding:0;justify-self:start;text-decoration:underline;text-underline-offset:3px}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.count{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.count b{color:var(--ink)}
+.sort{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.sort select{width:auto;padding:7px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+@media (max-width:560px){.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.card{--pad:11px}.swatch{height:74px}.name{font-size:15px}.times{top:16px;right:16px}}
+.more-btn{display:none;font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--chip);color:var(--plum);border-radius:12px;padding:9px 12px;cursor:pointer}
+@media (max-width:900px){.more-btn{display:block}.rail:not([data-open]) .more{display:none}}
+.card{--pad:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:var(--pad);display:flex;flex-direction:column;gap:10px;min-width:0;position:relative}
+.swatch{height:92px;border-radius:var(--blob);background:var(--sw);position:relative;overflow:hidden}
+.swatch::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 25% 20%,rgb(255 255 255/.28),transparent 55%),radial-gradient(90% 80% at 80% 90%,rgb(0 0 0/.22),transparent 60%)}
+.swatch.shimmer::before{content:"";position:absolute;inset:0;z-index:1;opacity:.85;
+  background-image:radial-gradient(circle,rgb(255 236 170/.95) 0 1px,transparent 1.6px),radial-gradient(circle,rgb(255 255 255/.8) 0 .8px,transparent 1.4px);
+  background-size:13px 11px,9px 14px;background-position:0 0,5px 6px}
+.swatch.sheen{box-shadow:inset -10px -8px 0 -2px rgb(150 60 160/.35)}
+.times{position:absolute;top:20px;right:20px;z-index:2;min-width:24px;height:24px;padding:0 6px;border-radius:99px;display:grid;place-items:center;
+  font-family:var(--display);font-size:11px;font-weight:700;background:var(--card);color:var(--plum);box-shadow:0 1px 4px rgb(0 0 0/.18);font-variant-numeric:tabular-nums}
+.swatch.photo{border-radius:14px;background:var(--sw);box-shadow:inset 0 0 0 1px rgb(0 0 0/.06)}.swatch.photo::before,.swatch.photo::after{display:none}
+.swatch.photo img{display:block;width:100%;height:100%;object-fit:cover}
+.card:has(.meta) .inked{margin-top:2px}
+.inked{order:99;margin:auto calc(-1 * var(--pad)) calc(-1 * var(--pad));padding:8px 10px;background:var(--band);border-top:1px solid var(--line);border-radius:0 0 15px 15px;text-align:center;font-size:12px;font-weight:400;color:var(--band-ink);font-variant-numeric:tabular-nums}
+.name{font-family:var(--display);font-weight:700;font-size:16px;line-height:1.2;margin:0;overflow-wrap:anywhere}
+.brand{font-size:13px;color:var(--muted);margin-top:2px}
+.meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+.tag{font-size:9.5px;font-weight:600;letter-spacing:.03em;line-height:1.3;border-radius:99px;padding:2px 6px;background:var(--chip);color:var(--muted)}
+.tag.vol{color:var(--plum);background:var(--lav)}
+.shop{font-family:var(--display);font-size:12px;font-weight:700;color:var(--plum);text-decoration:none;align-self:flex-start;border-bottom:2px solid var(--gold);padding-bottom:1px}
+.shop:hover{color:var(--gold)}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pager .pg{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pager .pg b{color:var(--ink)}
+.pager .btns{display:flex;gap:6px}
+.pager button{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--plum);border-radius:99px;padding:7px 14px;cursor:pointer}
+.pager button:disabled{opacity:.4;cursor:default}
+.pager button:not(:disabled):hover{background:var(--chip)}
+main{display:grid;gap:14px;align-content:start;min-width:0}
+.empty{grid-column:1/-1;text-align:center;padding:48px 16px;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:16px}
+footer{font-size:12px;color:var(--muted);display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .15s ease}.card:hover{transform:translateY(-2px)}}
+
+.titles{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.switch{font-family:var(--display);font-size:13px;font-weight:700;color:var(--plum);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 14px;text-decoration:none;white-space:nowrap}
+.switch:hover{background:var(--chip)}
+.penphoto{position:relative;aspect-ratio:2/1;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;display:grid;place-items:center}
+.penphoto img{width:100%;height:100%;object-fit:contain;display:block}
+.penphoto.empty{background:var(--chip)}
+.penphoto.empty::after{content:"";width:46%;height:10%;border-radius:99px;background:var(--line)}
+.salebadge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--plum);border-radius:99px;padding:3px 8px}
+.desc{font-size:13px;color:var(--ink);opacity:.8;margin:0;line-height:1.35}
+.mail{user-select:all;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="https://juliahere.com" target="_blank" rel="noopener" aria-label="julia here. — visit juliahere.com"><svg role="img" aria-label="julia here. pens + ink + journaling + planning" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 253.6126 80.7958"><g id="Components"><g id="_8766dfb6-5ed3-41cd-9dd0-48f0532c0af1_1"><path d="M236.0153,23.3315l.3555-.1523c1.6641-.7144,2.7393-2.3447,2.7393-4.1538,0-2.4937-2.0293-4.5225-4.5225-4.5225s-4.5244,2.0288-4.5244,4.5225c0,1.8154,1.0801,3.4502,2.752,4.165l.3564.1523-.0137,18.3179-1.085-1.749c-1.9404-3.1284-3.8867-5.0327-5.7686-6.874-1.6016-1.5718-3.0635-3.0063-4.54-5.1235-1.8184-2.6143-2.7783-5.6875-2.7783-8.8887,0-8.6025,6.999-15.6011,15.6016-15.6011s15.6006,6.9985,15.6006,15.6011c0,3.0532-.9443,6.0562-2.8086,8.9253-1.5088,2.3267-3.0088,3.8545-4.5967,5.4717-1.8438,1.875-3.7031,3.7661-5.7012,6.9443l-1.0869,1.7295.0205-18.7646Z" style="fill:#e0d3e8; stroke-width:0px;"/><path d="M234.5875,4.0122c8.2754,0,15.0137,6.7373,15.0137,15.0137,0,2.9424-.917,5.8389-2.7139,8.6055-1.4863,2.29-2.9785,3.8057-4.5527,5.4092-1.7793,1.8096-3.7119,3.7715-5.75,7.0137l.0176-16.335c1.8203-.7812,3.0947-2.585,3.0947-4.6934,0-2.8252-2.29-5.1104-5.1094-5.1104s-5.1113,2.2852-5.1113,5.1104c0,2.1084,1.2812,3.9238,3.1074,4.7051l-.0117,15.8711c-1.9678-3.1719-3.9297-5.0986-5.8564-6.9844-1.5439-1.5156-3.0068-2.9424-4.4697-5.04-1.7441-2.5078-2.6729-5.4619-2.6729-8.5518,0-8.2764,6.7383-15.0137,15.0146-15.0137M234.5875,2.8374c-8.9268,0-16.1895,7.2617-16.1895,16.1885,0,3.3213.9971,6.5098,2.8828,9.2227,1.5049,2.1572,2.9805,3.6064,4.543,5.1396l.0684.0674c1.8584,1.8193,3.7783,3.6982,5.6816,6.7656l2.1699,3.4976.0029-4.1157.0117-15.8711.001-.7764-.7139-.3047c-1.4541-.623-2.3945-2.0449-2.3945-3.625,0-2.1699,1.7666-3.9355,3.9365-3.9355s3.9346,1.7656,3.9346,3.9355c0,1.5742-.9355,2.9922-2.3828,3.6133l-.7109.3057-.001.7725-.0176,16.3354-.0049,4.0845,2.1738-3.4575c1.9619-3.1206,3.7969-4.9878,5.5703-6.7925l.0479-.0479c1.6104-1.6406,3.1328-3.1904,4.6758-5.5684,1.9268-2.9658,2.9033-6.0762,2.9033-9.2451,0-8.9268-7.2617-16.1885-16.1885-16.1885h0Z" style="fill:#e0d3e8; stroke-width:0px;"/><path d="M234.5871,0c-10.4909,0-19.0257,8.5348-19.0257,19.0256,0,3.912,1.1748,7.6654,3.3951,10.8491,1.6741,2.4024,3.3422,4.0354,4.9517,5.6096,3.0075,2.9428,5.8446,5.7212,8.764,13.7214.2878.7754,1.0162,1.2981,1.8443,1.3157h.0412c.8105,0,1.5448-.4875,1.8561-1.2394,3.1954-7.7477,5.9092-10.5084,8.7816-13.4277,1.6446-1.6741,3.3481-3.401,5.0574-6.0325,2.2321-3.4304,3.3599-7.0604,3.3599-10.7962,0-10.4908-8.5348-19.0256-19.0255-19.0256ZM246.887,27.6309c-1.4861,2.2908-2.9781,3.8063-4.5523,5.4098-1.7798,1.8092-3.7123,3.7711-5.7506,7.0134l.0176-16.3353c1.8208-.7812,3.0956-2.5845,3.0956-4.6932,0-2.8253-2.2909-5.1103-5.1103-5.1103s-5.1104,2.285-5.1104,5.1103c0,2.1087,1.2806,3.9238,3.1073,4.705l-.0118,15.8713c-1.9677-3.1719-3.9296-5.0985-5.8563-6.9841-1.5448-1.5155-3.0074-2.9428-4.47-5.0398-1.7445-2.5082-2.6727-5.4627-2.6727-8.5524,0-8.2763,6.7374-15.0137,15.0137-15.0137s15.0137,6.7374,15.0137,15.0137c0,2.9428-.9164,5.8387-2.7138,8.6053Z" style="fill:#52345f; stroke-width:0px;"/><path d="M215.5611,63.5746H22.881c-1.8815,0-3.4068-1.5253-3.4068-3.4068s1.5253-3.4068,3.4068-3.4068h192.6801c1.8815,0,3.4068,1.5253,3.4068,3.4068s-1.5253,3.4068-3.4068,3.4068Z" style="fill:#52345f; stroke-width:0px;"/><circle cx="234.4592" cy="60.1678" r="5.2448" style="fill:#52345f; stroke-width:0px;"/><path d="M3.4603,57.7651c2.5575,0,3.0589-2.0556,3.0589-3.7102v-22.0144c.05-1.7046,1.6547-3.1094,3.5103-3.1094,1.9056,0,3.5103,1.3537,3.5103,3.1094v21.8635c0,6.2177-2.2065,10.1799-8.8257,10.1799h-1.4042c-1.8051,0-3.3098-1.3537-3.3098-3.2093s1.5547-3.0594,3.3098-3.1094h.1505ZM10.0794,16.4446c2.407,0,4.3126,1.7556,4.3126,4.0622s-1.9056,4.1121-4.3126,4.1121c-2.3565,0-4.3626-1.8056-4.3626-4.1121s2.0061-4.0622,4.3626-4.0622Z" style="fill:#52345f; stroke-width:0px;"/><path d="M34.7997,49.1898c-1.2532,2.3575-4.0117,3.8612-6.7696,3.8612-5.2654,0-8.6252-2.6075-8.6252-9.2771v-11.7336c0-1.7556,1.6047-3.1094,3.5103-3.1094,1.8556,0,3.4603,1.4047,3.5103,3.1094v9.628c0,3.1094,1.1533,4.613,4.0622,4.613,2.457,0,4.3121-1.1527,4.3121-4.713v-9.528c0-1.7556,1.6047-3.1094,3.5103-3.1094,1.8556,0,3.4603,1.4047,3.5103,3.1094v17.7013c-.05,1.7046-1.6547,3.1094-3.5103,3.1094-1.9056,0-3.5103-1.3537-3.5103-3.1094v-.5519Z" style="fill:#52345f; stroke-width:0px;"/><path d="M54.856,49.7417c0,1.7556-1.6047,3.1094-3.5103,3.1094-1.8556,0-3.4603-1.4047-3.5103-3.1094v-30.4387c.05-1.7046,1.6547-3.1083,3.5103-3.1083,1.9056,0,3.5103,1.3537,3.5103,3.1083v30.4387Z" style="fill:#52345f; stroke-width:0px;"/><path d="M64.382,16.4446c2.357,0,4.2626,1.7556,4.2626,4.0622s-1.9056,4.1121-4.2626,4.1121-4.3626-1.8056-4.3626-4.1121,2.0061-4.0622,4.3626-4.0622ZM67.8923,49.7417c0,1.7556-1.6047,3.1094-3.5103,3.1094-1.8551,0-3.4598-1.4047-3.5103-3.1094v-17.7013c.0505-1.7046,1.6552-3.1094,3.5103-3.1094,1.9056,0,3.5103,1.3537,3.5103,3.1094v17.7013Z" style="fill:#52345f; stroke-width:0px;"/><path d="M91.1084,32.0404c.0505-1.7046,1.6552-3.1094,3.5103-3.1094,1.9056,0,3.5103,1.3537,3.5103,3.1094v17.7013c0,1.7556-1.6047,3.1094-3.5103,3.1094-1.8551,0-3.4598-1.4047-3.5103-3.1094v-.4509c-1.5042,2.4565-4.3626,3.7602-7.02,3.7602-5.9678,0-11.3831-4.4121-11.3831-12.1855s5.4154-12.1345,11.3831-12.1345c1.5042,0,5.0145.6519,7.02,3.7602v-.4509ZM85.4421,46.8333c3.1593,0,5.7168-2.8084,5.7168-5.9168s-2.5575-5.9178-5.7168-5.9178c-3.5103,0-5.5158,2.8084-5.5158,5.9178s2.0056,5.9168,5.5158,5.9168Z" style="fill:#52345f; stroke-width:0px;"/><path d="M132.2233,40.1137c0-3.0584-2.206-4.613-4.3121-4.613-2.2065,0-4.6135,1.1527-4.6135,4.713v9.528c0,1.7556-1.6047,3.1094-3.5103,3.1094-1.8556,0-3.4603-1.4047-3.5103-3.1094v-30.4387c.05-1.7046,1.6547-3.1083,3.5103-3.1083,1.9056,0,3.5103,1.3537,3.5103,3.1083v13.5392c.9528-2.9084,4.3126-4.1111,6.5186-4.1111,6.1682,0,9.4275,4.0611,9.4275,11.1317v9.879c0,1.7556-1.6047,3.1094-3.5103,3.1094-1.8551,0-3.4598-1.4047-3.5103-3.1094v-9.628Z" style="fill:#52345f; stroke-width:0px;"/><path d="M164.1136,50.9455c-2.357,1.5547-5.3154,2.1056-8.0733,2.1056-6.7196,0-12.236-4.864-12.236-12.2355s5.5164-12.0845,12.236-12.0845c6.6691,0,11.9845,4.914,11.9845,12.2854,0,1.2537-1.0528,2.1566-2.156,2.1566h-15.0939c.3509,2.7074,3.3093,3.8612,5.7668,3.8612,1.4037,0,2.6075-.101,4.0617-1.1038,1.6047-1.1028,3.4098-.8018,4.4126.3509,1.3042,1.5047.8023,3.6613-.9023,4.664ZM161.0043,38.81c-.3509-2.8584-2.3065-4.2621-4.914-4.2621s-4.6135,1.3037-5.2154,4.2621h10.1294Z" style="fill:#52345f; stroke-width:0px;"/><path d="M189.7352,32.5923c-.251,1.7546-1.9056,2.5575-3.4603,2.5575-.5014,0-1.2537-.051-1.7051-.051-3.9112,0-5.2149,3.0094-5.3154,8.8762v5.7668c0,1.7556-1.6047,3.1094-3.5103,3.1094-1.8551,0-3.4598-1.4047-3.5103-3.1094v-17.7013c.0505-1.7046,1.6552-3.1094,3.5103-3.1094,1.9056,0,3.5103,1.3537,3.5103,3.1094v2.5575c1.3037-4.3631,3.7612-5.8668,6.1682-5.8668,2.3065,0,4.7635.5509,4.3126,3.8612Z" style="fill:#52345f; stroke-width:0px;"/><path d="M211.5967,50.9455c-2.357,1.5547-5.3154,2.1056-8.0733,2.1056-6.7196,0-12.236-4.864-12.236-12.2355s5.5164-12.0845,12.236-12.0845c6.6691,0,11.9845,4.914,11.9845,12.2854,0,1.2537-1.0528,2.1566-2.156,2.1566h-15.0939c.3509,2.7074,3.3093,3.8612,5.7668,3.8612,1.4037,0,2.6075-.101,4.0617-1.1038,1.6047-1.1028,3.4098-.8018,4.4126.3509,1.3042,1.5047.8023,3.6613-.9023,4.664ZM208.4873,38.81c-.3509-2.8584-2.3065-4.2621-4.914-4.2621s-4.6135,1.3037-5.2154,4.2621h10.1294Z" style="fill:#52345f; stroke-width:0px;"/><path d="M19.4742,80.5775v-8.1775h1.8761l.0219.7636c.5014-.633,1.1445-.949,1.93-.949,1.7546,0,2.6817,1.3847,2.6817,3.0206,0,1.8752-1.297,3.3037-3.206,3.3037-.4905,0-.9481-.0977-1.3737-.3051v2.3437h-1.93ZM24.0539,75.3439c0-.9152-.4795-1.5591-1.4395-1.5591-.4466,0-.8504.1416-1.2102.4366v2.4205c.338.2293.6978.3489,1.0906.3489.981,0,1.5591-.6978,1.5591-1.6468Z" style="fill:#52345f; stroke-width:0px;"/><path d="M33.1448,75.3119c0,.0758,0,.1635-.011.2831l-.0219.2941h-4.2965c.1425.7636.7197,1.1454,1.7336,1.1454.7526,0,1.4833-.2073,2.214-.6111h.011v1.5482c-.7088.3818-1.5053.5782-2.3995.5782-1.951,0-3.4782-.938-3.4782-3.0425,0-1.94,1.3198-3.3037,3.2717-3.3037,1.919,0,2.9767,1.2431,2.9767,3.1082ZM31.4112,74.8205c-.0658-.7197-.5453-1.1445-1.265-1.1445s-1.1563.3818-1.3089,1.1445h2.5739Z" style="fill:#52345f; stroke-width:0px;"/><path d="M34.3953,78.3644v-5.9644h1.9081l.011.8613c.622-.6978,1.3308-1.0467,2.1044-1.0467,1.3527,0,2.0286.8723,2.0286,2.1702v3.9796h-1.93v-3.511c0-.654-.2941-.981-.8832-.981-.4476,0-.8832.1854-1.3089.5663v3.9257h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M41.8622,76.2929h.011c.8832.5453,1.7774.8175,2.7045.8175.5343,0,.8065-.1525.8065-.4466,0-.1315-.0767-.2293-.2183-.3051-.1635-.0877-.5343-.1964-1.1116-.3169-1.0687-.2174-2.2031-.5562-2.2031-1.8423,0-1.4614,1.3956-1.9848,2.6497-1.9848.7088,0,1.6678.2073,2.2898.5562v1.5811h-.011c-.8065-.4576-1.592-.6869-2.3657-.6869-.4914,0-.7307.1306-.7307.4037,0,.1306.0758.2393.2393.316.1854.0868.5672.1964,1.1454.316,1.0796.2512,2.1264.5891,2.1264,1.8861,0,1.5162-1.4066,1.9738-2.6936,1.9738-.9161,0-1.7994-.2183-2.6388-.654v-1.6139Z" style="fill:#52345f; stroke-width:0px;"/><path d="M51.65,75.0278v-.9591h2.4095v-2.4424h1.0248v2.4424h2.4095v.9591h-2.4095v2.4424h-1.0248v-2.4424h-2.4095Z" style="fill:#52345f; stroke-width:0px;"/><path d="M62.1666,70.6774v-.011c0-.6759.5343-1.0029,1.1673-1.0029.6321,0,1.1773.316,1.1773,1.0029v.011c0,.6649-.5562,1.0029-1.1664,1.0029-.622,0-1.1783-.327-1.1783-1.0029ZM62.374,78.3644v-5.9644h1.93v5.9644h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M65.9161,78.3644v-5.9644h1.9081l.011.8613c.622-.6978,1.3308-1.0467,2.1044-1.0467,1.3527,0,2.0286.8723,2.0286,2.1702v3.9796h-1.93v-3.511c0-.654-.2941-.981-.8832-.981-.4476,0-.8832.1854-1.3089.5663v3.9257h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M73.5026,78.3644v-8.3629h1.93v4.5578h.7636l1.4176-2.1592h2.1592v.011l-1.9409,2.8132,2.1044,3.1292v.011h-2.225l-1.4934-2.3008h-.7855v2.3008h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M84.0431,75.0278v-.9591h2.4095v-2.4424h1.0248v2.4424h2.4095v.9591h-2.4095v2.4424h-1.0248v-2.4424h-2.4095Z" style="fill:#52345f; stroke-width:0px;"/><path d="M93.4372,79.0842h.011c.2722.1087.5343.1635.7846.1635.4476,0,.6659-.2402.6659-.7197v-6.1279h1.9291v6.2366c0,1.4285-.6978,2.1483-2.1035,2.1483-.4695,0-.9052-.0658-1.287-.2073v-1.4934ZM94.6913,70.6774v-.011c0-.6759.5343-1.0029,1.1664-1.0029s1.1773.316,1.1773,1.0029v.011c0,.6649-.5562,1.0029-1.1664,1.0029-.6211,0-1.1773-.327-1.1773-1.0029Z" style="fill:#52345f; stroke-width:0px;"/><path d="M98.1018,75.3877c0-1.9848,1.4066-3.1841,3.3475-3.1841s3.3475,1.1883,3.3475,3.1841c0,1.9848-1.4176,3.1731-3.3475,3.1731s-3.3475-1.1883-3.3475-3.1731ZM102.8889,75.3877c0-.8832-.4905-1.6359-1.4395-1.6359-.9591,0-1.4395.7417-1.4395,1.6359s.4914,1.6249,1.4395,1.6249c.938,0,1.4395-.7417,1.4395-1.6249Z" style="fill:#52345f; stroke-width:0px;"/><path d="M112.0455,72.4v5.9644h-1.9081l-.011-.8394c-.6211.6869-1.3189,1.0358-2.0935,1.0358-1.3408,0-2.0387-.8832-2.0387-2.1812v-3.9796h1.93v3.511c0,.654.2941.981.8832.981.4466,0,.8832-.1845,1.308-.5553v-3.9367h1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M113.6339,78.3644v-5.9644h1.919v1.1015c.4695-.8175,1.0257-1.2322,1.6687-1.2322h.0977c.0548,0,.0986,0,.1525.011v1.93l-.4138-.0219c-.7526,0-1.2541.2293-1.4943.6759v3.5001h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M118.5059,78.3644v-5.9644h1.909l.01.8613c.622-.6978,1.3308-1.0467,2.1044-1.0467,1.3527,0,2.0286.8723,2.0286,2.1702v3.9796h-1.93v-3.511c0-.654-.295-.981-.8832-.981-.4476,0-.8832.1854-1.3089.5663v3.9257h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M125.7426,76.8811c0-1.0467.6978-1.4276,1.5591-1.7656.5133-.1854,1.276-.3169,2.3118-.3708v-.0767c0-.5782-.338-.8613-1.0248-.8613-.7526,0-1.5153.2512-2.2898.7636h-.011v-1.7007c.8403-.4366,1.7117-.6549,2.5949-.6549,1.7345,0,2.6059.8184,2.6059,2.4424v3.7074h-1.7656l-.0329-.6649c-.5124.5562-1.1664.8394-1.9409.8394-1.0577,0-2.0067-.4905-2.0067-1.6578ZM129.6135,76.7176v-.9371c-1.0139.0868-1.6459.2612-1.8971.5124-.0977.0977-.1525.2293-.1525.3818,0,.3599.2512.5343.7526.5343.4466,0,.9591-.1854,1.297-.4914Z" style="fill:#52345f; stroke-width:0px;"/><path d="M133.0022,78.3644v-8.3629h1.93v8.3629h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M136.3589,70.6774v-.011c0-.6759.5343-1.0029,1.1673-1.0029.6321,0,1.1773.316,1.1773,1.0029v.011c0,.6649-.5562,1.0029-1.1664,1.0029-.622,0-1.1783-.327-1.1783-1.0029ZM136.5662,78.3644v-5.9644h1.93v5.9644h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M140.1083,78.3644v-5.9644h1.9081l.011.8613c.622-.6978,1.3308-1.0467,2.1044-1.0467,1.3527,0,2.0286.8723,2.0286,2.1702v3.9796h-1.93v-3.511c0-.654-.2941-.981-.8832-.981-.4476,0-.8832.1854-1.3089.5663v3.9257h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M149.8431,76.5221l-.0868.5444c1.4495.1206,2.4533.3279,3.0306.622.5782.2941.8723.7088.8723,1.2431,0,.4905-.2393.8942-.7088,1.2322-.5992.4247-1.4824.6321-2.6497.6321-.9481,0-3.216-.1635-3.216-1.5372,0-.5343.3818-.9819,1.1445-1.3198l.3489-1.7117c-.7736-.3599-1.1664-.9481-1.1664-1.7665,0-1.5911,1.4934-2.235,2.879-2.235.3051,0,.5773.0329.8284.0877l.5453-.9819h1.9839v.0877l-1.3189,1.4285c.5562.3708.8284.8933.8284,1.5591,0,1.5591-1.5372,2.1364-2.8671,2.1364l-.4476-.021ZM151.9475,79.0732c0-.3818-1.0248-.6111-3.0635-.6978-.1964.1525-.295.316-.295.4795,0,.4905.633.7307,1.8971.7307.295,0,1.4614-.0548,1.4614-.5124ZM151.3803,74.3848c0-.633-.5014-.9161-1.0796-.9161-.5773,0-1.0897.2941-1.0897.9271,0,.6101.3599.9161,1.0897.9161.5891,0,1.0796-.295,1.0796-.9271Z" style="fill:#52345f; stroke-width:0px;"/><path d="M157.7658,75.0278v-.9591h2.4095v-2.4424h1.0248v2.4424h2.4095v.9591h-2.4095v2.4424h-1.0248v-2.4424h-2.4095Z" style="fill:#52345f; stroke-width:0px;"/><path d="M168.4688,80.5775v-8.1775h1.8761l.0219.7636c.5014-.633,1.1445-.949,1.93-.949,1.7546,0,2.6817,1.3847,2.6817,3.0206,0,1.8752-1.297,3.3037-3.206,3.3037-.4905,0-.9481-.0977-1.3737-.3051v2.3437h-1.93ZM173.0485,75.3439c0-.9152-.4795-1.5591-1.4395-1.5591-.4466,0-.8504.1416-1.2102.4366v2.4205c.338.2293.6978.3489,1.0906.3489.981,0,1.5591-.6978,1.5591-1.6468Z" style="fill:#52345f; stroke-width:0px;"/><path d="M176.2508,78.3644v-8.3629h1.93v8.3629h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M179.444,76.8811c0-1.0467.6978-1.4276,1.5591-1.7656.5133-.1854,1.276-.3169,2.3118-.3708v-.0767c0-.5782-.338-.8613-1.0248-.8613-.7526,0-1.5153.2512-2.2898.7636h-.011v-1.7007c.8403-.4366,1.7117-.6549,2.5949-.6549,1.7345,0,2.6059.8184,2.6059,2.4424v3.7074h-1.7656l-.0329-.6649c-.5124.5562-1.1664.8394-1.9409.8394-1.0577,0-2.0067-.4905-2.0067-1.6578ZM183.3149,76.7176v-.9371c-1.0139.0868-1.6459.2612-1.8971.5124-.0977.0977-.1525.2293-.1525.3818,0,.3599.2512.5343.7526.5343.4466,0,.9591-.1854,1.297-.4914Z" style="fill:#52345f; stroke-width:0px;"/><path d="M186.6816,78.3644v-5.9644h1.9081l.011.8613c.622-.6978,1.3308-1.0467,2.1044-1.0467,1.3527,0,2.0286.8723,2.0286,2.1702v3.9796h-1.93v-3.511c0-.654-.2941-.981-.8832-.981-.4476,0-.8832.1854-1.3089.5663v3.9257h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M194.2673,78.3644v-5.9644h1.909l.01.8613c.622-.6978,1.3308-1.0467,2.1044-1.0467,1.3527,0,2.0286.8723,2.0286,2.1702v3.9796h-1.93v-3.511c0-.654-.295-.981-.8832-.981-.4476,0-.8832.1854-1.3089.5663v3.9257h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M201.6693,70.6774v-.011c0-.6759.5334-1.0029,1.1664-1.0029.6321,0,1.1773.316,1.1773,1.0029v.011c0,.6649-.5562,1.0029-1.1664,1.0029-.622,0-1.1773-.327-1.1773-1.0029ZM201.8758,78.3644v-5.9644h1.93v5.9644h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M205.4179,78.3644v-5.9644h1.909l.01.8613c.622-.6978,1.3308-1.0467,2.1044-1.0467,1.3527,0,2.0286.8723,2.0286,2.1702v3.9796h-1.93v-3.511c0-.654-.295-.981-.8832-.981-.4476,0-.8832.1854-1.3089.5663v3.9257h-1.93Z" style="fill:#52345f; stroke-width:0px;"/><path d="M215.1518,76.5221l-.0868.5444c1.4495.1206,2.4533.3279,3.0306.622.5782.2941.8723.7088.8723,1.2431,0,.4905-.2393.8942-.7088,1.2322-.5992.4247-1.4824.6321-2.6497.6321-.9481,0-3.216-.1635-3.216-1.5372,0-.5343.3818-.9819,1.1445-1.3198l.3489-1.7117c-.7736-.3599-1.1664-.9481-1.1664-1.7665,0-1.5911,1.4934-2.235,2.879-2.235.3051,0,.5773.0329.8284.0877l.5453-.9819h1.9839v.0877l-1.3189,1.4285c.5562.3708.8284.8933.8284,1.5591,0,1.5591-1.5372,2.1364-2.8671,2.1364l-.4476-.021ZM217.2562,79.0732c0-.3818-1.0248-.6111-3.0635-.6978-.1964.1525-.295.316-.295.4795,0,.4905.633.7307,1.8971.7307.295,0,1.4614-.0548,1.4614-.5124ZM216.689,74.3848c0-.633-.5014-.9161-1.0796-.9161-.5773,0-1.0897.2941-1.0897.9271,0,.6101.3599.9161,1.0897.9161.5891,0,1.0796-.295,1.0796-.9271Z" style="fill:#52345f; stroke-width:0px;"/></g></g></svg></a></div>
+<div class="page">
+  <header class="hero">
+    <div class="titles">
+      <h1>Pen Library</h1>
+      <a class="switch" href="https://ink.juliahere.com/">Ink Library <span aria-hidden="true">→</span></a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="side">
+    <aside class="rail" aria-label="Filters">
+      <div class="group">
+        <label class="glabel" for="q">Search</label>
+        <input type="search" id="q" placeholder="Pen, brand or color" autocomplete="off">
+      </div>
+      <button type="button" class="more-btn" id="moreBtn" aria-expanded="false">Show filters</button>
+      <div class="group more">
+        <span class="glabel" id="stLabel">Show</span>
+        <div class="seg" role="group" aria-labelledby="stLabel" id="st">
+          <button type="button" data-v="" aria-pressed="true">All</button>
+          <button type="button" data-v="c" aria-pressed="false">Collection</button>
+          <button type="button" data-v="s" aria-pressed="false">For sale</button>
+        </div>
+      </div>
+      <div class="group more">
+        <label class="glabel" for="brand">Brand</label>
+        <select id="brand"><option value="">All brands</option></select>
+      </div>
+      <label class="toggle more" for="giftOnly"><input type="checkbox" id="giftOnly"> Gifted pens</label>
+      <button type="button" class="clear" id="clear" hidden>Clear all filters</button>
+    </aside>
+    <section class="statcard" aria-label="Collection at a glance">
+      <h2 class="glabel">The collection</h2>
+      <div class="stats" id="stats"></div>
+    </section>
+    </div>
+
+    <main>
+      <div class="bar">
+        <div class="count" id="count" aria-live="polite"></div>
+        <label class="sort" for="sort">Sort
+          <select id="sort">
+            <option value="name">Name A–Z</option>
+            <option value="brand">Brand A–Z</option>
+            <option value="inked">Most inked</option>
+          </select>
+        </label>
+      </div>
+      <nav class="pager" id="pagerTop" aria-label="Pages"></nav>
+      <div class="grid" id="grid"></div>
+      <nav class="pager" id="pagerBot" aria-label="Pages"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <span>“Inked” counts how many times I’ve used a pen in a currently inked rotation. Interested in a pen marked for sale? Email me at <b class="mail">oh.juliahere@gmail.com</b>.</span>
+    <span><a href="https://juliahere.com" target="_blank" rel="noopener">juliahere.com</a> · <span id="updated"></span></span>
+  </footer>
+</div>
+
+<script id="pen-data" type="application/json">{"updated":"2026-11-24","pens":[["014 Cherishment","Keyno · Dominant Industry","Cherishment",0,0,0,1,"347bd8456e86803a9df5e72b57352223"],["50 Falcon","Parker","Brown TX",1,0,0,2,"2f4bd8456e8680c5abb9dd104f8cfec4"],["88","Aurora","Volterra",0,0,0,3,"2fcbd8456e8680d681d6e75dd8ab785e"],["325","Laban","Cambridge",1,0,0,1,"3d8bd8456e8680198692dc6e26e67b33"],["469","PenBBS","Starry Night",1,0,0,0,"2f4bd8456e8680978b89e0efd0e0db60"],["743","Pilot","Verdigris (North American Exclusive)",0,0,0,3,"307bd8456e8680f19d43ed460cba5d95"],["1911L · Cthulhu","Sailor","Cthulhu",0,0,0,4,"2f9bd8456e86802bbc18d5a70529f8c9"],["1911L · Grape Expectations","Sailor","Grape Expectations",1,0,0,1,"3d8bd8456e86803c9d47c4106a15468d"],["1911S","Sailor","Yonomori Sakura (Limited Edition, Japan)",0,0,0,2,"2f9bd8456e86807eb770fdb995935198"],["3776 · Calico, Celluloid","Platinum","Calico, Celluloid",0,0,0,3,"2f9bd8456e868069bfe7e90d4f6f88d5"],["3776 · Nice Lavande","Platinum","Nice Lavande",1,0,0,3,"2f9bd8456e868010a647ea3ae58a5e66"],["3776 · x Hachimonjiya, Ayame","Platinum","x Hachimonjiya, Ayame",0,0,0,0,"2f9bd8456e86807f8652fb7359f3ffd6"],["AL Sport","Kaweco","Olivine",0,0,0,1,"309bd8456e8680d59644f5bd7e496b99"],["AL-Sport · Iguana Blue","Kaweco","Iguana Blue",0,0,0,1,"35cbd8456e8680af8c74dbc72821c4da"],["AL-Sport · Vibrant Violet","Kaweco","Vibrant Violet",0,0,0,1,"35cbd8456e86805488f5f11cbfe2454b"],["All-American","Conklin","Southwest Turquoise",0,0,0,0,"35cbd8456e8680179b4edf7a631f8a6a"],["Arena","Inoxcrom","“Frosted Blue + Metal”",0,0,0,1,"2f3bd8456e86809da2c1c58e88918d06"],["Balance","Sheaffer","Green Striated",0,0,0,1,"2f9bd8456e8680cdb344c8cc61185585"],["Baron","Baron","Maple Burl",0,0,0,0,"2f2bd8456e8680669018d948dccaefe8"],["Bespoke Fountain Pen · “Star Child”","Artisan Ink Pens","“Star Child”",0,0,0,1,"35cbd8456e86804cb88ec4e5eb74fb54"],["Bespoke Fountain Pen · “Teal Sparkle”","Artisan Ink Pens","“Teal Sparkle”",0,0,0,1,"2f2bd8456e86809f8a68f7a4b263e492"],["Bestie","Papa J Studios","01",1,0,0,0,"415bd8456e8680c89bb4cd2649ec9caf"],["Botticelli","BENU","",1,0,0,0,"415bd8456e8680d1a922cef682ef44f6"],["Boulder Opal","Relic Pens","",0,0,0,1,"35cbd8456e86802ab6f0cf959d6bc2ef"],["Cancer","Zodiac Pen Co.","Jade Mermaid",0,0,0,3,"2fcbd8456e868047adf7d0c13941ae61"],["Capless","Namiki","Nandine",0,0,0,0,"2f9bd8456e86808e915fe2dd19722740"],["Carène · Marine Amber","Waterman","Marine Amber",0,0,0,3,"2fcbd8456e86802ba3a9ea1e40474506"],["Carène · Sea Green Shimmer","Waterman","Sea Green Shimmer",0,0,0,0,"2fcbd8456e8680c7b9dbdfbb24a0ae40"],["Charlotte · “Acid Wash”","Carolina Pen Company","“Acid Wash”",0,0,0,1,"2f2bd8456e868034bc64f6c1ea763437"],["Charlotte · “Night Court”","Carolina Pen Company","“Night Court”",0,0,0,1,"35cbd8456e868089a6bad4b0c314dfd7"],["Classic","Kanilea Pen Co.","Papakōlea Maile Lei",0,0,0,1,"35cbd8456e86802ea211df94724965a8"],["Covenant SE","Taccia","Parchment Swirl",1,0,0,1,"2f9bd8456e8680908a6bed3daa0056e0"],["Custom 74","Pilot","Lavender Fog",0,0,0,1,"2f9bd8456e8680e3bc62d6e5b0c0e3d7"],["Custom Heritage 912","Pilot","Black, Silver Trim",0,0,0,0,"2f9bd8456e86806db2c6ec1392eb8be4"],["Darail","Darail Penz","“Dirty Soda Swirl”",0,0,0,1,"2f2bd8456e8680cdb426f487fef230d5"],["Darkside","Hinze Pens","Darkside x Stationery Universe",0,0,0,1,"3d8bd8456e8680a2a8a9cf021a813117"],["Decimo · Kobe Gradation Coastal Stone Gray Silver","Pilot","Kobe Gradation Coastal Stone Gray Silver",0,0,0,2,"2f9bd8456e8680909575cf0839c7dd63"],["Decimo · Kobe Gradation Harbor Mint","Pilot","Kobe Gradation Harbor Mint",0,0,0,1,"2f9bd8456e8680859292dc3a7d5ef99c"],["Decimo · Sangan Water Blue","Pilot","Sangan Water Blue",0,0,0,1,"416bd8456e8680848713e23903900776"],["Demo","Opus 88","Grey",0,0,0,0,"3a2bd8456e868057b33eeb8de6f0ae81"],["Diamond Mini","TWSBI","White, Rose Gold",0,0,0,2,"2f9bd8456e8680aeb3e6c9af63e674f3"],["Dumka","Desiderata Pen Company","Sodalite",0,0,0,2,"30cbd8456e8680468226e2229d426686"],["Duna","Delta","Tulipani",0,0,0,2,"2fcbd8456e86804d88f7ed4561b05082"],["Duofold International","Parker","Black & Pearl",0,0,0,2,"2f4bd8456e8680e69c1bd3b44c873983"],["Dusk","Kilk","Dusk",1,0,0,1,"37cbd8456e8680ed841fc8b834354438"],["E95S","Pilot","Burgundy/Ivory",0,0,0,2,"2f9bd8456e8680899b56c89440a67f68"],["Eco · Caffe/Bronze","TWSBI","Caffe/Bronze",0,0,0,1,"2fcbd8456e8680aa9cbfce0dfda2e356"],["Eco · Carrara","TWSBI","Carrara",0,0,0,0,"2fcbd8456e86807ba093f684a11296fb"],["Eco · Cosmo x Onyx","TWSBI","Cosmo x Onyx",1,0,0,0,"37cbd8456e86804dbbe7edf310bb223b"],["Eco · Cream/Rose Gold","TWSBI","Cream/Rose Gold",0,0,0,2,"2fcbd8456e8680bea7a5fde2b757ff3b"],["Eco · Espresso/Bronze","TWSBI","Espresso/Bronze",0,0,0,0,"2fcbd8456e8680f58cadcc1b11e57dc7"],["Eco · Fluorite x Bronze","TWSBI","Fluorite x Bronze",1,0,0,0,"37cbd8456e8680b8a58ce9586bdda5d5"],["Eco · Indigo/Bronze","TWSBI","Indigo/Bronze",0,0,0,1,"2fcbd8456e86809a92a6d2a836a08295"],["Eco · Jade Jelly x Bronze","TWSBI","Jade Jelly x Bronze",1,0,0,0,"405bd8456e868078ae98d879392c417a"],["Eco · Pastel Pink","TWSBI","Pastel Pink",0,0,0,1,"2fcbd8456e8680f2b723e443cebed7d6"],["Eco · Pink Lemonade x Bronze","TWSBI","Pink Lemonade x Bronze",1,0,0,0,"405bd8456e8680619085e2a4b3400119"],["Eco · Plum/Onyx","TWSBI","Plum/Onyx",0,0,0,0,"2fcbd8456e8680049c1ae1c8b92c2888"],["Eco · Root Beer + Bronze","TWSBI","Root Beer + Bronze",0,0,0,0,"35cbd8456e86804a959ec2f00479652e"],["Eco · Serpentine/Bronze","TWSBI","Serpentine/Bronze",0,0,0,1,"2fcbd8456e8680eb89d0c0ad6a83535f"],["Eco · Slate Blue/Onyx","TWSBI","Slate Blue/Onyx",0,0,0,0,"2fcbd8456e8680a9aa9be1c6c8bad118"],["Elmo 01","Montegrappa","Black",0,0,0,4,"2f4bd8456e8680bfa378f55a3c9de5f8"],["Estie · Blue Moon (2025 Re-Release)","Esterbrook","Blue Moon (2025 Re-Release)",0,0,0,1,"2f3bd8456e868037a45de4ad0fc17463"],["Estie · Botanical Garden","Esterbrook","Botanical Garden",1,0,0,1,"2f2bd8456e8680a69453d87b2334ffad"],["Estie · Candy","Esterbrook","Candy",0,0,0,1,"2f3bd8456e868054b148dd700d6a0ba8"],["Estie · Chiseled Stone","Esterbrook","Chiseled Stone",0,0,0,1,"2f2bd8456e868058a59cc75d4c7d5230"],["Estie · King of the Night","Esterbrook","King of the Night",1,0,0,3,"2f3bd8456e8680ba9386e9846c361741"],["Estie · Nebulous Plume x FWP, 2023","Esterbrook","Nebulous Plume x FWP, 2023",0,0,0,3,"2f2bd8456e86807ca11beb84fca13cab"],["Estie · Peacock","Esterbrook","Peacock",1,0,0,4,"2f2bd8456e8680d7b704f91ae912902d"],["Estie · Quirky Leaf","Esterbrook","Quirky Leaf",0,0,0,0,"2f2bd8456e86801f9efce70f139c9bf7"],["Estie · Raven","Esterbrook","Raven",1,0,0,4,"2f2bd8456e8680e28dc2e171d85788ea"],["Estie · Rock Star","Esterbrook","Rock Star",0,0,0,1,"327bd8456e8680dfac25c8c4bf8a89fd"],["Estie · Rocky Top","Esterbrook","Rocky Top",1,0,0,2,"2f2bd8456e868028acaae38402efbf5c"],["Estie · Winter White (Button Fill)","Esterbrook","Winter White (Button Fill)",0,0,0,3,"2f2bd8456e8680ffa53de67a48969c40"],["Estie · x Bungubox, Kachofugetsu Flower","Esterbrook","x Bungubox, Kachofugetsu Flower",0,0,0,2,"2f3bd8456e868041b5a6c6b6ee187cd3"],["Estie · x TCMC","Esterbrook","x TCMC",0,0,0,1,"2f3bd8456e8680208636f3ee82119637"],["Euphoria · Belle Paris (Benu Store Exclusive)","BENU","Belle Paris (Benu Store Exclusive)",1,0,0,1,"2f2bd8456e868004997bf55de7639196"],["Euphoria · Blueberry Sorbet","BENU","Blueberry Sorbet",1,0,0,2,"2f2bd8456e8680839717f1d73ae2d32a"],["Euphoria · Golden Beach","BENU","Golden Beach",0,0,0,1,"2f2bd8456e8680478878c441759988b7"],["Euphoria · Neptune’s Reach","BENU","Neptune’s Reach",1,0,0,1,"2f2bd8456e86802bbd91d608ab86ac91"],["Euphoria · Pink Guava","BENU","Pink Guava",1,0,0,1,"2f2bd8456e8680bdbeeee51490d2e5b0"],["Euphoria · White Beach","BENU","White Beach",1,0,0,2,"2f2bd8456e8680d1831bca22f3f18cb6"],["Euphoria · Wolf Point","BENU","Wolf Point",1,0,0,0,"2f2bd8456e8680f78f9dc2c69de817e7"],["Excellence A2","Diplomat","Guilloche Black",0,0,0,4,"2f2bd8456e8680b59828daa0fefc2363"],["Explorer","Pilot","Turquoise Matte",1,0,0,0,"37cbd8456e8680aeaf5bcc63e9024532"],["Fenestro","Fine Writing International","Forest Rain",0,0,0,1,"2fcbd8456e8680ce828fc424d4111512"],["First Anniversary","Papa J Studios","",1,0,0,2,"2f4bd8456e86809ab518c059f4cc4178"],["Fountain Pen · Floral","John Twiss","Floral",0,0,0,1,"37cbd8456e8680f598cad6785f09c953"],["Fountain Pen · Kurage (Jellyfish)","seY","Kurage (Jellyfish)",0,0,0,0,"2fcbd8456e8680b6ab07c42e87fca150"],["Fountain Pen · Slate","Lotus Pens","Slate",0,0,0,1,"2fcbd8456e86804ab3cec4f47a4594c3"],["Frontier","Parker","Metallic Burgundy",0,0,0,0,"2f4bd8456e8680cbb3b6ea9f900646c8"],["Gilded Candy Corn","Papa J Studios","Gilded Candy Corn",0,0,0,0,"415bd8456e8680ac93fbc3709f047833"],["Gnome","Pens by Pasquale","Button Candy Factory",1,0,0,0,"2fcbd8456e868077ac1cfed7d3b6d8a2"],["Hakobune","Eboya","Crema Cafe",0,0,0,1,"2fcbd8456e86801783a3c2b41c1593e5"],["Haute · Chic","BENU","Chic",1,0,0,0,"2f2bd8456e868070ae1cf1cbe1aad7f8"],["Haute · Solara Rivera","BENU","Solara Rivera",1,0,0,0,"3d8bd8456e86806f8a8ee7a7964f1884"],["Haute · Strawberry Milkshake","BENU","Strawberry Milkshake",1,0,0,0,"415bd8456e8680d4a47fdbd3cfb2abae"],["Jazz","Opus 88","Transparent",0,0,0,4,"2f4bd8456e8680d0ac44e098886e15c2"],["JR Pocket","Esterbrook","Fantasia",0,0,0,4,"2f3bd8456e868089abc3ea9fea3921d3"],["Junior Profit Retro","Sailor","Heisei Pop",1,0,0,1,"2f9bd8456e868094bf42e1ac7857e25a"],["Kiei Urushi - Holly Olive Akatame","Wancher","2 Leaves",0,0,0,1,"30cbd8456e86804b93afffe32d8ea4cf"],["King of Pen","Sailor","Moroccan Mint Tea, Kissan",0,0,0,1,"2f9bd8456e8680a8b307f4b110b841a3"],["La Dotta · Altre Stelle","Scribo","Altre Stelle",0,0,0,0,"329bd8456e8680e0b8f0fe43b41a5bd3"],["Lamy 2000","Lamy","Makrolon",0,0,0,3,"2f3bd8456e86808583dec2729b9d4f0c"],["Lavender Giraffe","Mike's Pen Fun","",0,0,0,1,"35cbd8456e868077b1f3de858d337b0f"],["Lecoule","Sailor","x Ancora, Rainy Day",0,0,0,1,"2f9bd8456e86808286ddd8ac4809b76e"],["Legend 15","Ryan Krusac","Teak Burl",1,0,0,2,"2f9bd8456e8680e4a155c24d2c0eea3d"],["LVED","Skogsy Pens","Yellow Green",0,0,0,1,"2f9bd8456e86807fa4e1f1cc2e643aef"],["LX · Marron","Lamy","Marron",0,0,0,2,"2f3bd8456e8680be857cc3115a0ec632"],["LX · Rose Gold, Empire State Building","Lamy","Rose Gold, Empire State Building",0,0,0,2,"2f3bd8456e868059955ad9c714cf16d4"],["M100","Pelikan","Stormtrooper (White)",0,0,0,1,"2f4bd8456e86805b9348c5f993226abf"],["M600 · Art Collection, Rudi Rother","Pelikan","Art Collection, Rudi Rother",0,0,0,1,"2f4bd8456e8680cb894de5ed901be0ca"],["M600 · Art, Georg Tippel","Pelikan","Art, Georg Tippel",0,0,0,0,"37cbd8456e868008be1fcd15c5c40011"],["M600 · Violet White","Pelikan","Violet White",0,0,0,0,"381bd8456e8680c9be1cf01d4b7026ac"],["M605","Pelikan","White Stripes",0,0,0,2,"2f4bd8456e868066acccf81ee686db5a"],["M620","Pelikan","New York",1,0,0,5,"2f4bd8456e86801a8653dd2566d80d0a"],["M800","Pelikan","Red/Black Stripes (Old Style)",0,0,0,3,"2f4bd8456e86807d90c2cc43c6c5997e"],["M1000","Pelikan","Green/Black Stripes (Old Style)",0,0,0,0,"2f4bd8456e86809f87faf66c93182df6"],["Magico · Amethyst","Leonardo","Amethyst",0,0,0,2,"2f3bd8456e8680ae8bc8c32b09811416"],["Magico · Loveletter","Leonardo","Loveletter",1,0,0,2,"303bd8456e8680ab826acfa63663b3d4"],["Magico · Sea Sand","Leonardo","Sea Sand",0,0,0,2,"2f3bd8456e8680578cb2f6b033c08f2f"],["Masterpiece Delgado · Butterscotch Vintage","PenLux","Butterscotch Vintage",0,0,0,1,"3d8bd8456e868003acd9dd190218f4bb"],["Masterpiece Delgado · Eurploea","PenLux","Eurploea",0,0,0,3,"2f4bd8456e8680fd8f62e689d2291f5e"],["Meisterstück Classique","Montblanc","Olympic Heritage Chamonix 1924",0,0,0,1,"2f4bd8456e86806da94cdab885f1c63a"],["Meridian","Skaban Studio","Pale Drift",0,0,0,0,""],["Metallic Melted Crayon","Hinze Pens","Metallic Melted Crayon",0,0,0,1,"2f3bd8456e8680408f19c3a8bb8b3016"],["Mistress","Little Hollow Customs","“Nightberry”",0,0,0,2,"2f4bd8456e868061ba84cceb615f9b72"],["Model J","Esterbrook","Violet",0,0,0,3,"2f3bd8456e86801eac89d6c6853fa6d2"],["Momento Zero · Aster Bouquet","Leonardo","Aster Bouquet",0,0,0,1,"34ebd8456e868032ae45ec1850de63dc"],["Momento Zero · Circus","Leonardo","Circus",1,0,0,0,"415bd8456e86800faff1c4c7a823c3ff"],["Momento Zero · Euphoria","Leonardo","Euphoria",0,0,0,2,"2f3bd8456e86808bbb65ecafc7f25591"],["Momento Zero · Horn","Leonardo","Horn",0,0,0,1,"2f3bd8456e8680bab897fa5505c199d5"],["Momento Zero · Nuvola Lilac, Rose Gold Trim","Leonardo","Nuvola Lilac, Rose Gold Trim",0,0,0,1,"2f4bd8456e868003b3ecc628bcadca5b"],["Momento Zero · Nuvola, Gold Trim","Leonardo","Nuvola, Gold Trim",0,0,0,2,"2f3bd8456e86808db853c4d25abd7930"],["Momento Zero · Prugna (Plum)/Rose Gold","Leonardo","Prugna (Plum)/Rose Gold",0,0,0,2,"2f3bd8456e868069bcfcdf8df23b0e92"],["Momento Zero · Radici","Leonardo","Radici",1,0,0,1,"416bd8456e8680cc86f4ca14fac750c4"],["Momento Zero · Rosewood Ebonite","Leonardo","Rosewood Ebonite",1,0,0,2,"2f3bd8456e8680828019cf1fc5fe3b5d"],["MP1 · Cherry Blossom x Goldspot Pens","Monteverde USA","Cherry Blossom x Goldspot Pens",1,0,0,0,"3d8bd8456e8680dca2b1cef51b544486"],["MP1 · Mermaid Tales","Monteverde USA","Mermaid Tales",0,0,0,0,"2f4bd8456e8680c29a5de9abf7145b2a"],["MP1 · Write Alotl","Monteverde USA","Write Alotl",0,0,0,0,"41abd8456e8680eea69df28f29f5d474"],["MST","Magna Carta","Black Opal",1,0,0,2,"2f4bd8456e86809fb77ae2a4d52fc2df"],["MYU 701","Pilot","",0,0,0,2,"2f9bd8456e8680a4afffef6f11c149d4"],["Nautilus · Cephalopod Black","Nahvalur","Cephalopod Black",0,0,0,2,"2f4bd8456e868087bff0c82ddc19c5da"],["Nautilus · Cotton Candy (Atlas Exclusive)","Nahvalur","Cotton Candy (Atlas Exclusive)",0,0,0,2,"2f4bd8456e868070a02ce6193a3beba4"],["New York Enchantment","Pens by Pasquale","New York Enchantment",0,0,0,1,"3d8bd8456e8680bcabffe6ae7acaeb85"],["Niblet","Esterbrook","Tortoise",1,0,0,1,"2f3bd8456e868038a646d3a3b440907b"],["Novo Baroque","Kilk","Tortoise Brown",0,0,0,1,"33fbd8456e8680afad79ecd6ec0f16d3"],["Origin","Consul","Alabaster",1,0,0,0,"415bd8456e8680edb873d15f53acc7da"],["Orion","Drewnem Pisane","Floral",0,0,0,1,"37cbd8456e8680ec8ed7f155e758b5bd"],["Persephone Floral","Papa J Studios","Persephone Floral",0,0,0,2,"2f4bd8456e8680a996c5ee2d7ff26b46"],["PFM 1","Sheaffer","Green",0,0,0,1,"2f9bd8456e8680889a38e6d851900297"],["Pilot Capless","seY","Raden",0,0,0,1,"37cbd8456e8680ba9c47e530e1ac5b0b"],["Pioneer","Mondu","Perla",0,0,0,1,"35cbd8456e86808a9c10dcd50956a18d"],["Pro Gear · Demo","Sailor","Demo",0,0,0,3,"2f9bd8456e8680f28886c197da4c6da7"],["Pro Gear · Follow the Mermaid","Sailor","Follow the Mermaid",0,0,0,1,"2f9bd8456e8680099695f2f27f4f5145"],["Pro Gear · Starboard Lights","Sailor","Starboard Lights",1,0,0,2,"2f9bd8456e868035b337ce374398d4f7"],["Pro Gear · x Maki Shimano","Sailor","x Maki Shimano",0,0,0,1,"2f9bd8456e8680ada7b8eb0ac19e8168"],["Pro Gear Slim","Sailor","Storm Over the Ocean",0,0,0,2,"2f9bd8456e86805fb102daff5f9d81aa"],["Pro Gear Slim Mini Rencontre","Sailor","Helianthe",0,0,0,1,"2f9bd8456e8680c3b72ac3166eafacc7"],["Profit","Sailor","x Ancora, Custom Colorway (Designed by me!)",0,0,0,1,"2f9bd8456e8680378f17c6599312111a"],["Safari · Cream (SE 2022)","Lamy","Cream (SE 2022)",0,0,0,2,"2f3bd8456e868016b5b7f74909f70fef"],["Safari · Field Green (SE)","Lamy","Field Green (SE)",0,0,0,1,"2f3bd8456e868032b649f8f12748f2f5"],["Sagittarius","Zodiac Pen Co.","BIPS",0,0,0,1,"35cbd8456e8680e381def6b2d482088f"],["Scheletru","Mondu","Scheletru",1,0,0,1,"416bd8456e8680d399f8ca25b4e4c08d"],["Snake #5","Stüdyo Ağaçkakan","Cream",0,0,0,0,"2fcbd8456e8680f3b8e8f4f78ccba2ee"],["Sport · Green","Kaweco","Green",1,0,0,1,"3edbd8456e868047bc0df353c0b1b670"],["Sport · Iridescent Pearl","Kaweco","Iridescent Pearl",0,0,0,2,"33fbd8456e868068b623c2e3d713f7b5"],["Stylograph","Conklin","Brown Mosaic",0,0,0,1,"2f2bd8456e8680f6acf9d4ba3b4e8fc0"],["Ursa","White Bear Pens","“Mermaid”",0,0,0,4,"2fcbd8456e868038a945cba3b63fd343"],["V800","Asvine","Clear Gold Trim",1,0,0,0,"2f2bd8456e86803e9dfaed27f9f3db1c"],["Vanishing Point · Black Matte","Pilot","Black Matte",0,0,0,4,"2f9bd8456e8680ce9e68ea43c0db6645"],["Vanishing Point · Gold Stripes","Pilot","Gold Stripes",0,0,0,3,"2f9bd8456e8680b0b076d43e5136243a"],["Vanishing Point · Green, Taiwan 30th Anniversary","Pilot","Green, Taiwan 30th Anniversary",0,0,0,1,"2f9bd8456e8680baae86f293af3990e8"],["Vanishing Point · Silver Stripes","Pilot","Silver Stripes",0,0,0,1,"2f9bd8456e868024b8d4e4aa163ebbe2"],["Vanishing Point · Starry Dusk, Taiwan 36th Anniversary","Pilot","Starry Dusk, Taiwan 36th Anniversary",0,0,0,0,"3d8bd8456e8680059d1efdf5353ef69e"],["Vanishing Point · Starry Moon, Taiwan 35th Anniversary","Pilot","Starry Moon, Taiwan 35th Anniversary",0,0,0,1,"2f9bd8456e8680618c0be1e34c697065"],["Velma","Bonecrusher 7 Studios","“Wedding Dress” Ghost Wing",0,0,0,5,"2f2bd8456e8680cc92ece2ba58581a7b"],["Virgo","Zodiac Pen Co.","Conversation Hearts",0,0,0,2,"2fcbd8456e8680299000da6923c5d2e3"],["Wilde Wedding","Papa J Studios","Custom, Bouquet",0,0,0,3,"2f4bd8456e8680a18689dfc5005fcd04"],["Wildflower","Tailored Pen Co.","Wildflower",0,0,0,3,"2f9bd8456e86808b9e2ce04d6a5f9796"]]}</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById("pen-data").textContent);
+  const EMAIL = "oh.juliahere@gmail.com";
+  // row: [name, brand, description, gifted, forSale, price, timesInked, photoId]
+  const pens = DATA.pens.map(([name, brand, d, g, s, price, t, img], i) => ({ name, brand, d, g, s, price, t, img, i }));
+  const $ = id => document.getElementById(id);
+  const mobileQ = matchMedia("(max-width: 640px)");
+  let PER = mobileQ.matches ? 24 : 100;
+  mobileQ.addEventListener("change", e => { PER = e.matches ? 24 : 100; render(); });
+  const SW = {};
+  for (const k of "0123456789abcdef"){
+    fetch(`photos/b-${k}.json`).then(r => r.ok ? r.json() : {}).then(b => {
+      Object.assign(SW, b);
+      document.querySelectorAll("img[data-sw]:not([src])").forEach(im => { if (SW[im.dataset.sw]) im.src = SW[im.dataset.sw]; });
+    }).catch(() => {});
+  }
+  const state = { q: "", st: "", brand: "", gift: false, sort: "name" };
+  const coll = new Intl.Collator(undefined, { sensitivity: "base", numeric: true });
+  const strip = s => s.replace(/^[“"'(\[#]+/, "");
+
+  const brands = [...new Set(pens.map(r => r.brand).filter(Boolean))].sort(coll.compare);
+  const stat = (n, l) => { const d = document.createElement("div"); d.className = "stat"; const b = document.createElement("b"); b.textContent = n; const s = document.createElement("span"); s.textContent = l; d.append(b, s); return d; };
+  $("stats").append(stat(pens.length, "pens"), stat(brands.length, "brands"), (pens.some(r => r.s) ? stat(pens.filter(r => r.s).length, "for sale") : stat(pens.filter(r => r.g).length, "gifted")));
+  if (DATA.updated) $("updated").textContent = "Updated " + new Date(DATA.updated + "T12:00:00").toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+  for (const b of brands){ const o = document.createElement("option"); o.value = b; o.textContent = `${b} (${pens.filter(r => r.brand === b).length})`; $("brand").append(o); }
+
+  if (!pens.some(r => r.s)) $("st").closest(".group").hidden = true;   // no pens for sale right now: hide the Show filter
+  $("moreBtn").addEventListener("click", () => { const r = document.querySelector(".rail"), open = !r.hasAttribute("data-open"); r.toggleAttribute("data-open", open); $("moreBtn").setAttribute("aria-expanded", open); $("moreBtn").textContent = open ? "Hide filters" : "Show filters"; });
+  $("q").addEventListener("input", e => { state.q = e.target.value.trim().toLowerCase(); render(); });
+  $("brand").addEventListener("change", e => { state.brand = e.target.value; render(); });
+  $("giftOnly").addEventListener("change", e => { state.gift = e.target.checked; render(); });
+  $("sort").addEventListener("change", e => { state.sort = e.target.value; render(); });
+  $("st").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; state.st = b.dataset.v; for (const x of $("st").children) x.setAttribute("aria-pressed", x === b); render(); });
+  $("clear").addEventListener("click", () => {
+    Object.assign(state, { q: "", st: "", brand: "", gift: false });
+    $("q").value = ""; $("brand").value = ""; $("giftOnly").checked = false;
+    for (const x of $("st").children) x.setAttribute("aria-pressed", x.dataset.v === "");
+    render();
+  });
+
+  const money = n => "$" + (Number.isInteger(n) ? n : n.toFixed(2));
+  function card(r){
+    const a = document.createElement("article"); a.className = "card" + (r.s ? " sale" : "");
+    const ph = document.createElement("div"); ph.className = "penphoto";
+    if (r.img){
+      const im = document.createElement("img"); im.alt = r.name; im.decoding = "async"; im.dataset.sw = r.img;
+      if (SW[r.img]) im.src = SW[r.img];
+      im.addEventListener("error", () => im.remove());
+      ph.append(im);
+    } else { ph.classList.add("empty"); ph.setAttribute("aria-hidden", "true"); }
+    if (r.s){ const b = document.createElement("span"); b.className = "salebadge"; b.textContent = "For sale"; ph.append(b); }
+    a.append(ph);
+    if (r.t > 0){ const t = document.createElement("div"); t.className = "inked"; t.textContent = `Inked ${r.t} time${r.t === 1 ? "" : "s"}`; a.append(t); }
+    const head = document.createElement("div");
+    const n = document.createElement("h2"); n.className = "name"; n.textContent = r.name;
+    const b = document.createElement("div"); b.className = "brand"; b.textContent = r.brand;
+    head.append(n, b); a.append(head);
+    if (r.d && !r.name.toLowerCase().includes(r.d.toLowerCase())){ const d = document.createElement("p"); d.className = "desc"; d.textContent = r.d; a.append(d); }
+    const meta = document.createElement("div"); meta.className = "meta";
+    if (r.g){ const t = document.createElement("span"); t.className = "tag"; t.textContent = "Gifted"; meta.append(t); }
+    if (r.s && r.price){ const t = document.createElement("span"); t.className = "tag vol"; t.textContent = money(r.price) + " shipped"; meta.append(t); }
+    if (meta.childNodes.length) a.append(meta);
+    if (r.s){
+      const m = document.createElement("a"); m.className = "shop";
+      m.href = `mailto:${EMAIL}?subject=${encodeURIComponent("Interested in your " + r.name)}`;
+      m.textContent = "Email me about this pen ↗"; a.append(m);
+    }
+    return a;
+  }
+
+  function render(page = 0){
+    let list = pens.filter(r =>
+      (!state.q || r.name.toLowerCase().includes(state.q) || r.brand.toLowerCase().includes(state.q) || r.d.toLowerCase().includes(state.q)) &&
+      (!state.st || (state.st === "s" ? r.s : !r.s)) &&
+      (!state.brand || r.brand === state.brand) &&
+      (!state.gift || r.g));
+    const byName = (a, b) => coll.compare(strip(a.name), strip(b.name));
+    list.sort(state.sort === "brand" ? (a, b) => coll.compare(a.brand, b.brand) || byName(a, b)
+      : state.sort === "inked" ? (a, b) => b.t - a.t || byName(a, b) : byName);
+    const pages = Math.max(1, Math.ceil(list.length / PER));
+    page = Math.min(Math.max(0, page), pages - 1);
+    const from = page * PER, shown = list.slice(from, from + PER);
+    const frag = document.createDocumentFragment();
+    for (const r of shown) frag.append(card(r));
+    if (!list.length){ const e = document.createElement("div"); e.className = "empty"; e.textContent = "No pens match those filters. Try removing one."; frag.append(e); }
+    $("grid").replaceChildren(frag);
+    $("count").innerHTML = list.length === pens.length ? `<b>${pens.length}</b> pens` : `<b>${list.length}</b> of ${pens.length} pens match`;
+    for (const id of ["pagerTop", "pagerBot"]){
+      const nav = $(id); nav.hidden = pages < 2; if (pages < 2) continue;
+      const pg = document.createElement("span"); pg.className = "pg";
+      pg.innerHTML = `Showing <b>${from + 1}–${from + shown.length}</b> of ${list.length} · Page ${page + 1} of ${pages}`;
+      const btns = document.createElement("div"); btns.className = "btns";
+      const mk = (label, to) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.disabled = to < 0 || to >= pages;
+        b.addEventListener("click", () => { render(to); $("pagerTop").scrollIntoView({ block: "start", behavior: "smooth" }); }); return b; };
+      btns.append(mk("‹ Previous", page - 1), mk("Next ›", page + 1));
+      nav.replaceChildren(pg, btns);
+    }
+    $("clear").hidden = !(state.q || state.st || state.brand || state.gift);
+  }
+  render();
+})();
+</script>
+
+</body>
+</html>
